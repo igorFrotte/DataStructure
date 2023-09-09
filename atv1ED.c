@@ -115,6 +115,24 @@ void printTree(int opt, Tree **t){
     }
 }
 
+//destruir a arvore
+
+int exist(int x, Tree *t){
+    if(t != NULL){
+        if(t->info == x)
+            return 1;
+        return exist(x, t->left) || exist(x, t->right);
+    }
+    return 0;
+}
+
+int count(Tree *t){
+    if(t != NULL){
+        return 1 + count(t->left) + count(t->right);
+    }
+    return 0;
+}
+
 int main(){
     int option;
     Tree *tree = NULL; 
@@ -132,6 +150,16 @@ int main(){
             printf("\nDigite a opção:\n     1- Pré-ordem\n     2- Em-ordem\n     3- Pós-ordem\n     4- Em largura\n");
             scanf("%d", &opt);
             printTree(opt, &tree);
+        }else if(option == 3){
+            int x;
+            printf("\nDigite o valor do elemento\n");
+            scanf("%d", &x);
+            if(exist(x, tree) == 0)
+                printf("O elemento %d não está presente na árvore", x);
+            else
+                printf("O elemento %d está presente na árvore", x);
+        }else if(option == 4){
+            printf("\nA árvore possui %d elementos\n", count(tree));
         }
 
     }
