@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 typedef struct tree{
     int info;
@@ -11,8 +12,8 @@ typedef struct tree{
 int mainMenu(){
     int option;
     printf("\n1- Ler a árvore de um arquivo\n2- Imprimir a árvore\n3- Verificar se um elemento x existe na árvore\n");
-    printf("4- Contar o número de elementos na árvore\n5- Imprimir os nós folhas da árvore\n6- Verificar a árvore está balanceada\n");
-    printf("7- Verificar se árvore é cheia\n8- Imprimir o nível de um nó x\n9- Sair\n");
+    printf("4- Contar o número de elementos na árvore\n5- Imprimir os nós folhas da árvore\n6- Verificar se a árvore está balanceada\n");
+    printf("7- Verificar se a árvore é cheia\n8- Imprimir o nível de um nó x\n9- Sair\n");
     scanf("%d", &option);
     return option;
 }
@@ -71,51 +72,46 @@ void postOrder(Tree *t){
     }
 }
 
-//fazer
-void inWidth(){
-
+void printLvl(Tree *t, int c, int lvl){
+    if(t != NULL){
+        if(c == lvl)
+            printf("%d  ", t->info);
+        else {
+            printLvl(t->left, c+1, lvl);
+            printLvl(t->right, c+1, lvl);
+        }
+    }
 }
 
-// Em Largura, temos uma função que tem auxilio de uma pilha para organizar os nós da arvore.
-void ImprimirEmLargura(Tree *arv, int tamanho) {
-  Tree **fila;
-  int i = 0;
-  int f = 1;
-  fila = malloc(tamanho * sizeof(Tree *));
-  fila[0] = arv;
-  while(f > i) {
-    arv =  fila[i++];
-    printf("%d \n", arv->info);
-    if(arv->left != NULL) {
-      fila[f++] = arv->left;
+int height(Tree *t){
+    if(t!= NULL){
+        int hl = height(t->left);
+        int hr = height(t->right);
+        if(hl > hr)
+            return hl + 1;
+        return hr + 1;
     }
-    if(arv->right != NULL) {
-      fila[f++] = arv->right;
+    return 0;
+}
+
+void inWidth(Tree *t){
+    int i;
+    for(i=0; i<height(t); i++){
+        printLvl(t, 0, i);
     }
-  }
-  free(fila);
-} 
+}
 
-
-
-
-
-
-
-
-void printTree(int opt, Tree **t){
+void printTree(int opt, Tree *t){
     if(opt == 1){
-        preOrder(*t);
+        preOrder(t);
     } else if(opt == 2){
-        inOrder(*t);
+        inOrder(t);
     } else if(opt == 3){
-        postOrder(*t);
+        postOrder(t);
     } else if(opt == 4){
-        ImprimirEmLargura(*t, 2);
+        inWidth(t);
     }
 }
-
-//destruir a arvore
 
 int exist(int x, Tree *t){
     if(t != NULL){
@@ -133,6 +129,49 @@ int count(Tree *t){
     return 0;
 }
 
+void countLeaves(Tree *t){
+    if(t != NULL){
+        if(t->left == NULL && t->right == NULL)
+            printf("%d ", t->info);
+        countLeaves(t->left);
+        countLeaves(t->right);
+    }
+}
+
+int isBalanced(Tree *t){
+    if(t != NULL){
+        if(abs(height(t->left) - height(t->right)) > 1)
+            return 0;
+        return isBalanced(t->left) * isBalanced(t->right);
+    }
+    return 1;
+}
+
+int isFull(Tree *t){
+    int result = (int) (pow(2, height(t)) - 1);
+    if(result == count(t))  
+        return 1; 
+    return 0;
+}
+
+int lvlOf(int x, Tree *t, int n){
+    if(t == NULL)
+        return 0;
+    if(t->info == x){
+        return n;
+    }
+    return lvlOf(x, t->left, n+1) + lvlOf(x, t->right, n+1);
+}
+
+Tree *destruct(Tree *t){
+    if(t != NULL){
+        t->left = destruct(t->left);
+        t->right = destruct(t->right);
+        free(t);
+    }
+    return NULL;
+}
+
 int main(){
     int option;
     Tree *tree = NULL; 
@@ -145,23 +184,53 @@ int main(){
             printf("\nDigite o caminho do arquivo\n");
             scanf("%s", path);
             printf("%s", createFromFile(path, &tree));
-        }else if(option == 2){
+        }
+        if(option == 2){
             int opt;
             printf("\nDigite a opção:\n     1- Pré-ordem\n     2- Em-ordem\n     3- Pós-ordem\n     4- Em largura\n");
             scanf("%d", &opt);
-            printTree(opt, &tree);
-        }else if(option == 3){
+            printTree(opt, tree);
+        }
+        if(option == 3){
             int x;
             printf("\nDigite o valor do elemento\n");
             scanf("%d", &x);
             if(exist(x, tree) == 0)
-                printf("O elemento %d não está presente na árvore", x);
+                printf("O elemento %d não está presente na árvore\n", x);
             else
-                printf("O elemento %d está presente na árvore", x);
-        }else if(option == 4){
-            printf("\nA árvore possui %d elementos\n", count(tree));
+                printf("O elemento %d está presente na árvore\n", x);
         }
-
+        if(option == 4)
+            printf("\nA árvore possui %d elementos\n", count(tree));
+        if(option == 5){
+            printf("\nOs nós folhas da árvore são: ");
+            countLeaves(tree);
+            printf("\n");
+        }
+        if(option == 6){
+            if(isBalanced(tree) == 0)
+                printf("\nA árvore não é balanceada\n");
+            else
+                printf("\nA árvore é balanceada\n");
+        }
+        if(option == 7){
+            if(isFull(tree) == 0)
+                printf("\nA árvore não é cheia\n");
+            else
+                printf("\nA árvore é cheia\n");
+        }
+        if(option == 8){
+            int x;
+            printf("\nDigite o nó\n");
+            scanf("%d", &x);
+            if(exist(x ,tree) != 0)
+                printf("\nO nó %d está no nível %d\n", x, lvlOf(x, tree, 0));
+            else
+                printf("O elemento %d não está presente na árvore\n", x);
+        }
+        if(option == 9){
+            destruct(tree);
+        }
     }
 }
 
