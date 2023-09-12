@@ -18,9 +18,19 @@ typedef struct tree{
 
 int mainMenu(){
     int option;
-    printf("\n1- Ler a árvore de um arquivo\n2- Imprimir a árvore\n3- Verificar se um elemento x existe na árvore\n");
-    printf("4- Contar o número de elementos na árvore\n5- Imprimir os nós folhas da árvore\n6- Verificar se a árvore está balanceada\n");
-    printf("7- Verificar se a árvore é cheia\n8- Imprimir o nível de um nó x\n9- Sair\n");
+    printf("\n1- Ler a árvore de um arquivo");
+    printf("\n2- Imprimir a árvore");
+    printf("\n3- Verificar se um elemento x existe na árvore");
+    printf("\n4- Contar o número de elementos na árvore");
+    printf("\n5- Imprimir os nós folhas da árvore");
+    printf("\n6- Verificar se a árvore está balanceada");
+    printf("\n7- Verificar se a árvore é cheia");
+    printf("\n8- Imprimir o nível de um nó x");
+    printf("\n9- Contar o número de ocorrência de um elemento");
+    printf("\n10- Verificar se a árvore é completa");
+    printf("\n11- Imprimir a árvore na notação");
+    printf("\n12- Verificar se a árvore está ordenada");
+    printf("\n13- Sair\n");
     scanf("%d", &option);
     return option;
 }
@@ -43,6 +53,17 @@ Tree *createTree(FILE *f){
         fscanf(f, "%c", &c);
         return t;
     }
+}
+
+void printNote(Tree *t){
+    if(t != NULL){
+        printf("(%d", t->info);
+        printNote(t->left);
+        printNote(t->right);
+        printf(")");
+    }
+    else 
+        printf("(-1)");
 }
 
 char *createFromPath(char *path, Tree **t){
@@ -163,27 +184,62 @@ int isFull(Tree *t){
 
 int lvlOf(int x, Tree *t, int n){
     if(t == NULL)
-        return 0;
-    if(t->info == x){
+        return -1;
+    if(t->info == x)
         return n;
-    }
-    return lvlOf(x, t->left, n+1) + lvlOf(x, t->right, n+1);
+    int vl = lvlOf(x, t->left, n+1);
+    int vr = lvlOf(x, t->right, n+1);
+    if(vl == -1 || vr == -1)
+        return vl + vr + 1;
+    else
+        return vl;
 }
 
-Tree *destruct(Tree *t){
+int countOf(int x, Tree *t){
     if(t != NULL){
-        t->left = destruct(t->left);
-        t->right = destruct(t->right);
+        if(t->info == x)
+            return countOf(x, t->left) + countOf(x, t->right) + 1;
+        else
+            return countOf(x, t->left) + countOf(x, t->right);
+    }
+    return 0;
+}
+
+int isCompleted(Tree *t, int lvl, int h){
+    if(t != NULL){
+        if((t->left == NULL || t->right == NULL) && lvl < h-2)
+            return 0;
+        return isCompleted(t->left, lvl+1, h) * isCompleted(t->right, lvl+1, h);
+    }
+    return 1;
+}
+
+int isOrdered(Tree *t){
+    if(t != NULL){
+        if(t->left != NULL)
+            if(t->left->info > t->info)
+                return 0;
+        if(t->right != NULL)
+            if(t->right->info <= t->info)
+                return 0;
+        return isOrdered(t->left) * isOrdered(t->right);
+    }
+    return 1;
+}
+
+Tree destruct(Tree *t){
+    if(t != NULL){
+        destruct(t->left);
+        destruct(t->right);
         free(t);
     }
-    return NULL;
 }
 
 int main(){
     int option;
     Tree *tree = NULL; 
 
-    while (option != 9){
+    while (option != 13){
     
         option = mainMenu();
         if(option == 1){
@@ -236,6 +292,30 @@ int main(){
                 printf("\nO elemento %d não está presente na árvore\n", x);
         }
         if(option == 9){
+            int x;
+            printf("\nDigite o valor do elemento\n");
+            scanf("%d", &x);
+            if(exist(x ,tree) != 0)
+                printf("\nexistem %d elementos de valor %d\n", countOf(x, tree), x);
+            else
+                printf("\nO elemento %d não está presente na árvore\n", x);
+        }
+        if(option == 10){
+            if(isCompleted(tree, 0, height(tree)) == 0)
+                printf("\nA árvore não é completa\n");
+            else
+                printf("\nA árvore é completa\n");
+        }
+        if(option == 11){
+            printNote(tree);
+        }
+        if(option == 12){
+            if(isOrdered(tree) == 0)
+                printf("\nA árvore não é ordenada\n");
+            else
+                printf("\nA árvore é ordenada\n");
+        }
+        if(option == 13){
             destruct(tree);
         }
     }
