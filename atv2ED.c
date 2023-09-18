@@ -6,8 +6,6 @@
 /* 
     Aluno: Igor Frotté Pedro
     Matrícula: 123060011 
-
-    OBS: o pow() deu problema na inclusão da lib math.h, precisei compilar com o -lm: gcc atv1ED.c -o atv1ED -lm
 */
 
 typedef struct tree{
@@ -129,17 +127,24 @@ int exist(int x, Tree *t){
     if(t != NULL){
         if(t->info == x)
             return 1;
-        return exist(x, t->left) || exist(x, t->right);
+        if(x < t->info)
+            return exist(x, t->left);
+        else
+            return exist(x, t->right);
     }
     return 0;
 }
 
-void countLeaves(Tree *t){
+void printLeavesSmallerThan(int x, Tree *t){
     if(t != NULL){
-        if(t->left == NULL && t->right == NULL)
+        if(t->left == NULL && t->right == NULL && t->info < x)
             printf("%d ", t->info);
-        countLeaves(t->left);
-        countLeaves(t->right);
+        if(x < t->info)
+            printLeavesSmallerThan(x, t->left);
+        else {
+            printLeavesSmallerThan(x, t->left);
+            printLeavesSmallerThan(x, t->right);
+        }
     }
 }
 
@@ -148,12 +153,10 @@ int lvlOf(int x, Tree *t, int n){
         return -1;
     if(t->info == x)
         return n;
-    int vl = lvlOf(x, t->left, n+1);
-    int vr = lvlOf(x, t->right, n+1);
-    if(vl == -1 || vr == -1)
-        return vl + vr + 1;
+    if(x < t->info)
+        return lvlOf(x, t->left, n+1);
     else
-        return vl;
+        return lvlOf(x, t->right, n+1); 
 }
 
 void destruct(Tree *t){
@@ -164,25 +167,23 @@ void destruct(Tree *t){
     }
 }
 
-
-//ver
-Tree *insert(int x, Tree *t){
+Tree *insertItem(int x, Tree *t){
     if(t == NULL){
         Tree *aux = (Tree *)malloc(sizeof(Tree));
+        aux->info = x;
         aux->left = NULL;
         aux->right = NULL;
         return aux;
     } else {
         if(x <= t->info)
-            t->left = insert(x, t->left);
+            t->left = insertItem(x, t->left);
         else
-            t->right = insert(x, t->right);
+            t->right = insertItem(x, t->right);
     }
     return t;
 }
 
-//ver
-Tree *remove(int x, Tree *t){
+Tree *removeItem(int x, Tree *t){
     if(t->info == x){
         if(t->left == NULL && t->right == NULL){
             free(t);
@@ -200,12 +201,12 @@ Tree *remove(int x, Tree *t){
             while(aux->right != NULL)
                 aux = aux->right;
             t->info = aux->info;
-            t->left = remove(aux->info, t->left);
+            t->left = removeItem(aux->info, t->left);
         }
     } else if(x < t->info) 
-        t->left = remove(x, t->left);
+        t->left = removeItem(x, t->left);
     else
-        t->right = remove(x, t->right);
+        t->right = removeItem(x, t->right);
     return t;
 }
 
@@ -247,15 +248,27 @@ int main(){
                 printf("\nO elemento %d não está presente na árvore\n", x);
         }
         if(option == 5){
-            printf("\nOs nós folhas da árvore são: ");
-            countLeaves(tree);
+            int x;
+            printf("\nDigite o valor do elemento\n");
+            scanf("%d", &x);
+            printf("\nOs nós folhas da árvore menores que %d são: ", x);
+            printLeavesSmallerThan(x, tree);
             printf("\n");
         }
         if(option == 6){
-            //inserir
+            int x;
+            printf("\nDigite o valor do elemento\n");
+            scanf("%d", &x);
+            tree = insertItem(x, tree);
         }
         if(option == 7){
-            //remover - valor existe
+            int x;
+            printf("\nDigite o valor do elemento\n");
+            scanf("%d", &x);
+            if(exist(x, tree) == 0)
+                printf("\nO elemento %d não está presente na árvore\n", x);
+            else
+                tree = removeItem(x, tree);
         }
         if(option == 8){
             destruct(tree);
