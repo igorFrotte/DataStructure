@@ -8,3 +8,4 @@ Programas relacionados à utilização de árvores em C.
 ### AVL
 ### Arvore Rubro Negra
 ### BackTracking
+### Heap
