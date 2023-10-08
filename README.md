@@ -1,4 +1,4 @@
-# arvoresBinarias
+# Arvores Binarias
 
 Programas relacionados à utilização de árvores em C. 
 
@@ -6,4 +6,6 @@ Programas relacionados à utilização de árvores em C.
 ### Árvores Binárias
 ### Árvores Binárias de Busca
 ### AVL
-### ARN
+### Arvore Rubro Negra
+### BackTracking
+### Heap
