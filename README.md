@@ -1,6 +1,6 @@
 # Arvores Binarias
 
-Programas relacionados à utilização de árvores em C. 
+Programas relacionados à utilização de árvores na linguagem C. 
 
 ### Listas Encadeadas
 ### Árvores Binárias
