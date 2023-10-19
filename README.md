@@ -1,4 +1,4 @@
-# Arvores Binarias
+# Arvores
 
 Programas relacionados à utilização de árvores na linguagem C. 
 
