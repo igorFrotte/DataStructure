@@ -210,6 +210,26 @@ Tree *removeItem(int x, Tree *t){
     return t;
 }
 
+int maisRepete(Tree *a, int *maior, int *num){
+    if(a == NULL)
+        return -1;
+    int n = a->info, q = 0;
+    Tree *aux = a;
+    while(aux->info == a->info){
+        q++;
+        if(aux->left == NULL)
+            break;
+        aux = aux->left;
+    }
+    if(q > *maior){
+        *maior = q;
+        *num = n;
+    }
+    maisRepete(a->left, maior, num);
+    maisRepete(a->right, maior, num);
+    return *num;
+}
+
 int main(){
     int option;
     Tree *tree = NULL; 
@@ -272,6 +292,10 @@ int main(){
         }
         if(option == 8){
             destruct(tree);
+        }
+        if(option == 9){
+            int x, y = 0;
+            printf("\n%d\n", maisRepete(tree, &y, &x));
         }
     }
 }
