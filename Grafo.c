@@ -54,11 +54,42 @@ List *RemoveItem(List *list, int d){
     return list;
 }
 
-void RemoveEdge(List **g, int o, int d) {
+void RemoveEdge(List **g, int o, int d){
     g[o] = RemoveItem(g[o], d);  
 }
 
+void printList(List *g){
+    if(g != NULL) {
+        printf("-(%d,%d)",g->dest, g->cost);
+        printList(g->next);
+    }
+}
 
+void printGraph(List **g, int n){
+  for(int i = 1; i <= n; i++) {
+    printf("Origem: %d \n", i);
+    printList(g[i]);
+  }
+}
+
+/* int GrafoCompleto(List **g, int n){
+  int count = 0;
+  int completo = 0;
+  for(int i = 1; i <= n; i++) {
+    Lista * aux = grafo[i];
+    while(aux != NULL) {
+      count++;
+      aux = aux->prox;
+    }
+  }
+  printf("Contagem de arestas: %d \n", count);
+  int eq = n * (n -1) / 2;
+  if(count == eq) {
+    return 1;
+  } else {
+    return 0;
+  }
+} */
 
 
 
@@ -88,16 +119,20 @@ int main(){
         option = mainMenu();
         if(option == 1){
             int orig, dest, cost;
-            printf("Digite a origem, o destino e o custo (Nesta ordem): \n");
+            printf("\nDigite a origem, o destino e o custo (Nesta ordem).\n");
             scanf("%d %d %d", &orig, &dest, &cost);
 
             InsertEdge(graph,  orig,  dest,  cost);
         }
         if(option == 2){
-            
+        int orig, dest;
+            printf("\nDigite a origem e o destino da aresta (Nesta ordem).\n");
+            scanf("%d, %d", &orig, &dest);
+
+            RemoveEdge(graph, orig, dest);
         }
         if(option == 3){
-            
+            printGraph(graph, n);
         }
         if(option == 4){
             
