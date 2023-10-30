@@ -12,6 +12,8 @@ typedef struct list{
     struct list *next;
 }List;
 
+int n;
+
 List** createGraph(int n){
     List **g = (List**)malloc((n + 1) * sizeof(List*));
     for(int i = 0; i <= n; i++) 
@@ -30,7 +32,6 @@ List *InsertList(List *list, int d, int c){
 void InsertEdge(List **g, int o, int d, int c){
     g[o] = InsertList(g[o], d, c);
 }
-
 
 List *RemoveItem(List *list, int d){
     if(list == NULL) 
@@ -74,28 +75,55 @@ void printGraph(List **g, int n){
   printf("\n");
 }
 
-/* int GrafoCompleto(List **g, int n){
-  int count = 0;
-  int completo = 0;
-  for(int i = 1; i <= n; i++) {
-    Lista * aux = grafo[i];
+void printInOut(List **g, int x){
+    int out = 0;
+    List *aux = g[x];
     while(aux != NULL) {
-      count++;
-      aux = aux->prox;
+        out++;
+        aux = aux->next;
     }
-  }
-  printf("Contagem de arestas: %d \n", count);
-  int eq = n * (n -1) / 2;
-  if(count == eq) {
-    return 1;
-  } else {
-    return 0;
-  }
-} */
 
+    int in = 0;
+    for(int i = 1; i <= n; i++) {
+        aux = g[i];
+        while(aux != NULL) {
+            if(aux->dest == x) 
+                in++;
+            aux = aux->next;
+        }
+    }
 
+    printf("\nSaidas: %d", out);
+    printf("\nEntradas: %d \n", in);
+}
 
+int isCompleted(List **g){
+    int count = 0;
+    for(int i = 1; i <= n; i++){
+        List * aux = g[i];
+        while(aux != NULL) {
+            count++;
+            aux = aux->next;
+        }
+    }
+    int eq = n * (n -1) / 2;
+    if(count == eq)
+        return 1;
+    else 
+        return 0;
+} 
 
+void destruct(List **g){
+    for(int i = 0; i <= n; i++){
+        List* aux = g[i];
+        while(aux != NULL){
+            List* temp = aux->next;
+            free(aux);
+            aux = temp;
+        }
+    }
+    free(g);
+}
 
 int mainMenu(){
     int option;
@@ -110,7 +138,7 @@ int mainMenu(){
 }
 
 int main(){
-    int option, n;
+    int option;
     printf("\nDigite o número de vértices do Grafo.\n");
     scanf("%d", &n);
 
@@ -137,13 +165,21 @@ int main(){
             printGraph(graph, n);
         }
         if(option == 4){
-            
+            int ed;
+            printf("\nInsira o vértice a se pesquisar.\n");
+            scanf("%d", &ed);
+
+            printInOut( graph, ed);
         }
         if(option == 5){
-            
+            int isComp = isCompleted(graph);
+            if(isComp == 1)
+                printf("\nÉ completo! \n");
+            else
+                printf("\nNão é completo! \n");
         }
         if(option == 6){
-            
+            destruct(graph);
         }
     }
 }
