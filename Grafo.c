@@ -30,7 +30,10 @@ List *InsertList(List *list, int d, int c){
 }
 
 void InsertEdge(List **g, int o, int d, int c){
-    g[o] = InsertList(g[o], d, c);
+    if(o > n)
+        printf("\nTamanho máximo é %d\n", n);
+    else
+        g[o] = InsertList(g[o], d, c);
 }
 
 List *RemoveItem(List *list, int d){
@@ -57,7 +60,10 @@ List *RemoveItem(List *list, int d){
 }
 
 void RemoveEdge(List **g, int o, int d){
-    g[o] = RemoveItem(g[o], d);  
+    if(o > n)
+        printf("\nTamanho máximo é %d\n", n);
+    else
+        g[o] = RemoveItem(g[o], d);  
 }
 
 void printList(List *g){
@@ -101,12 +107,12 @@ int isCompleted(List **g){
     int count = 0;
     for(int i = 1; i <= n; i++){
         List * aux = g[i];
-        while(aux != NULL) {
+        while(aux != NULL){
             count++;
             aux = aux->next;
         }
     }
-    int eq = n * (n -1) / 2;
+    int eq = n * (n -1);
     if(count == eq)
         return 1;
     else 
@@ -155,9 +161,9 @@ int main(){
             InsertEdge(graph,  orig,  dest,  cost);
         }
         if(option == 2){
-        int orig, dest;
+            int orig, dest;
             printf("\nDigite a origem e o destino da aresta (Nesta ordem).\n");
-            scanf("%d, %d", &orig, &dest);
+            scanf("%d %d", &orig, &dest);
 
             RemoveEdge(graph, orig, dest);
         }
@@ -169,7 +175,10 @@ int main(){
             printf("\nInsira o vértice a se pesquisar.\n");
             scanf("%d", &ed);
 
-            printInOut( graph, ed);
+            if(ed > n)
+                printf("\nTamanho máximo é %d\n", n);
+            else
+                printInOut(graph, ed);
         }
         if(option == 5){
             int isComp = isCompleted(graph);
