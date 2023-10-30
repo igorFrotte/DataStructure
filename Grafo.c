@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 /* 
     Aluno: Igor Frotté Pedro
@@ -18,7 +19,7 @@ List** createGraph(int n){
     return g;
 }
 
-List *InseritList(List *list, int d, int c){
+List *InsertList(List *list, int d, int c){
     List *new = (List *) malloc(sizeof(List));
     new->dest = d;
     new->cost = c;
@@ -60,16 +61,17 @@ void RemoveEdge(List **g, int o, int d){
 
 void printList(List *g){
     if(g != NULL) {
-        printf("-(%d,%d)",g->dest, g->cost);
+        printf(" - (%d,%d)",g->dest, g->cost);
         printList(g->next);
     }
 }
 
 void printGraph(List **g, int n){
   for(int i = 1; i <= n; i++) {
-    printf("Origem: %d \n", i);
+    printf("\nOrigem: %d", i);
     printList(g[i]);
   }
+  printf("\n");
 }
 
 /* int GrafoCompleto(List **g, int n){
