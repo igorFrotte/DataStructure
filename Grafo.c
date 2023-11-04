@@ -119,6 +119,32 @@ int isCompleted(List **g){
         return 0;
 } 
 
+int exist(int *vet, int v, int p){
+    for(int i = 0; i<p; i++){
+        if(vet[i] == v)
+            return 1;
+    }
+    return 0;
+}
+
+void path(List **g, int d, int *vet, int p){
+    if(vet[p-1] == d){
+        printf("\n");
+        for(int i = 0; i<p; i++)
+            printf("%d ", vet[i]);
+    }
+    else {
+        List *l = g[vet[p-1]];
+        while(l != NULL){
+            if(!exist(vet, l->dest, p)){
+                vet[p] = l->dest;
+                path(g, d, vet, p+1);
+            }
+            l = l->next;
+        }
+    }
+}
+
 void destruct(List **g){
     for(int i = 0; i <= n; i++){
         List* aux = g[i];
@@ -190,18 +216,20 @@ int main(){
                 printf("\nNão é completo! \n");
         }
         if(option == 6){
-            int orig, dest;
-            printf("Digite a origem e o destino (Nesta ordem).");
-            scanf("%d %d", &orig, &dest);
+            int dest, *vet = (int *)malloc(n*sizeof(int));
+            printf("\nDigite a origem e o destino (Nesta ordem).\n");
+            scanf("%d %d", &vet[0], &dest);
+            path(graph, dest,  vet, 1);
+            printf("\n");
         }
         if(option == 7){
             int orig, dest;
-            printf("Digite a origem e o destino (Nesta ordem).");
+            printf("\nDigite a origem e o destino (Nesta ordem).\n");
             scanf("%d %d", &orig, &dest);
         }
         if(option == 8){
             int orig, dest;
-            printf("Digite a origem e o destino (Nesta ordem).");
+            printf("\nDigite a origem e o destino (Nesta ordem).\n");
             scanf("%d %d", &orig, &dest);
         }
         if(option == 9){
