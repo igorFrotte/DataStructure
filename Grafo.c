@@ -145,6 +145,27 @@ void path(List **g, int d, int *vet, int p){
     }
 }
 
+void shortestPath(List **g, int d, int *vet, int p, int **res, int *len){
+    if(vet[p-1] == d && p < *len){
+        //limpar o res
+        int *r = (int *)malloc(p*sizeof(int));
+        for(int i = 0; i<p; i++)
+            r[i] = vet[i];
+        *res = r;
+        *len = p;
+    }
+    else {
+        List *l = g[vet[p-1]];
+        while(l != NULL){
+            if(!exist(vet, l->dest, p)){
+                vet[p] = l->dest;
+                shortestPath(g, d, vet, p+1, res, len);
+            }
+            l = l->next;
+        }
+    }
+}
+
 void destruct(List **g){
     for(int i = 0; i <= n; i++){
         List* aux = g[i];
@@ -219,13 +240,18 @@ int main(){
             int dest, *vet = (int *)malloc(n*sizeof(int));
             printf("\nDigite a origem e o destino (Nesta ordem).\n");
             scanf("%d %d", &vet[0], &dest);
-            path(graph, dest,  vet, 1);
+            path(graph, dest, vet, 1);
             printf("\n");
         }
         if(option == 7){
-            int orig, dest;
+            int dest, *res, len = n+1, *vet = (int *)malloc(n*sizeof(int));
             printf("\nDigite a origem e o destino (Nesta ordem).\n");
-            scanf("%d %d", &orig, &dest);
+            scanf("%d %d", &vet[0], &dest);
+            shortestPath(graph, dest, vet, 1, &res, &len);
+            printf("\n");
+            for(int i = 0; i<len; i++)
+                printf("%d ", res[i]); 
+            printf("\n");
         }
         if(option == 8){
             int orig, dest;
