@@ -106,7 +106,7 @@ void printInOut(List **g, int x){
 int isCompleted(List **g){
     int count = 0;
     for(int i = 1; i <= n; i++){
-        List * aux = g[i];
+        List *aux = g[i];
         while(aux != NULL){
             count++;
             aux = aux->next;
@@ -123,9 +123,9 @@ void destruct(List **g){
     for(int i = 0; i <= n; i++){
         List* aux = g[i];
         while(aux != NULL){
-            List* temp = aux->next;
+            List *next = aux->next;
             free(aux);
-            aux = temp;
+            aux = next;
         }
     }
     free(g);
@@ -138,7 +138,10 @@ int mainMenu(){
     printf("\n3- Imprimir Grafo.");
     printf("\n4- Imprimir os graus de entrada e saída de um Vértice.");
     printf("\n5- Verificar se é completo.");
-    printf("\n6- Sair\n");
+    printf("\n6- Imprimir todos os caminhos entre uma origem e um destino.");
+    printf("\n7- Imprimir o caminho mais curto (Com menos arestas).");
+    printf("\n8- Imprimir o caminho de menos custo (Menor soma dos custos).");
+    printf("\n9- Sair\n");
     scanf("%d", &option);
     return option;
 }
@@ -150,7 +153,7 @@ int main(){
 
     List** graph = createGraph(n);
 
-    while (option != 6){
+    while (option != 9){
 
         option = mainMenu();
         if(option == 1){
@@ -181,13 +184,27 @@ int main(){
                 printInOut(graph, ed);
         }
         if(option == 5){
-            int isComp = isCompleted(graph);
-            if(isComp == 1)
+            if(isCompleted(graph) == 1)
                 printf("\nÉ completo! \n");
             else
                 printf("\nNão é completo! \n");
         }
         if(option == 6){
+            int orig, dest;
+            printf("Digite a origem e o destino (Nesta ordem).");
+            scanf("%d %d", &orig, &dest);
+        }
+        if(option == 7){
+            int orig, dest;
+            printf("Digite a origem e o destino (Nesta ordem).");
+            scanf("%d %d", &orig, &dest);
+        }
+        if(option == 8){
+            int orig, dest;
+            printf("Digite a origem e o destino (Nesta ordem).");
+            scanf("%d %d", &orig, &dest);
+        }
+        if(option == 9){
             destruct(graph);
         }
     }
