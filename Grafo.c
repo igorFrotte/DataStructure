@@ -147,7 +147,7 @@ void path(List **g, int d, int *vet, int p){
 
 void shortestPath(List **g, int d, int *vet, int p, int **res, int *len){
     if(vet[p-1] == d && p < *len){
-        //limpar o res
+        free(*res);
         int *r = (int *)malloc(p*sizeof(int));
         for(int i = 0; i<p; i++)
             r[i] = vet[i];
@@ -160,6 +160,44 @@ void shortestPath(List **g, int d, int *vet, int p, int **res, int *len){
             if(!exist(vet, l->dest, p)){
                 vet[p] = l->dest;
                 shortestPath(g, d, vet, p+1, res, len);
+            }
+            l = l->next;
+        }
+    }
+}
+
+void costByPath(List **g, int *vet, int *c, int l){
+    if(vet != NULL){
+        for(int i=0; i<(l-1); i++){
+            List *list = g[vet[i]];
+            while(list->dest != vet[i+1]){
+                list = list->next;
+            }
+            *c = *c + list->cost;
+        }
+    }
+}
+
+void lowestCostPath(List **g, int d, int *vet, int p, int **res, int *len){
+    if(vet[p-1] == d){
+        int costVet = 0, costRes = 0;
+        costByPath(g, vet, &costVet, p);
+        costByPath(g, *res, &costRes, *len);
+        if(costVet <= costRes || *res == NULL){
+            free(*res);
+            int *r = (int *)malloc(p*sizeof(int));
+            for(int i = 0; i<p; i++)
+                r[i] = vet[i];
+            *res = r;
+            *len = p;
+        }   
+    }
+    else {
+        List *l = g[vet[p-1]];
+        while(l != NULL){
+            if(!exist(vet, l->dest, p)){
+                vet[p] = l->dest;
+                lowestCostPath(g, d, vet, p+1, res, len);
             }
             l = l->next;
         }
@@ -187,7 +225,7 @@ int mainMenu(){
     printf("\n5- Verificar se é completo.");
     printf("\n6- Imprimir todos os caminhos entre uma origem e um destino.");
     printf("\n7- Imprimir o caminho mais curto (Com menos arestas).");
-    printf("\n8- Imprimir o caminho de menos custo (Menor soma dos custos).");
+    printf("\n8- Imprimir o caminho com o menor custo (Menor soma dos custos).");
     printf("\n9- Sair\n");
     scanf("%d", &option);
     return option;
@@ -244,7 +282,7 @@ int main(){
             printf("\n");
         }
         if(option == 7){
-            int dest, *res, len = n+1, *vet = (int *)malloc(n*sizeof(int));
+            int dest, *res = NULL, len = n+1, *vet = (int *)malloc(n*sizeof(int));
             printf("\nDigite a origem e o destino (Nesta ordem).\n");
             scanf("%d %d", &vet[0], &dest);
             shortestPath(graph, dest, vet, 1, &res, &len);
@@ -254,9 +292,14 @@ int main(){
             printf("\n");
         }
         if(option == 8){
-            int orig, dest;
+            int dest, *res = NULL, len = n+1, *vet = (int *)malloc(n*sizeof(int));
             printf("\nDigite a origem e o destino (Nesta ordem).\n");
-            scanf("%d %d", &orig, &dest);
+            scanf("%d %d", &vet[0], &dest);
+            lowestCostPath(graph, dest, vet, 1, &res, &len);
+            printf("\n");
+            for(int i = 0; i<len; i++)
+                printf("%d ", res[i]); 
+            printf("\n");
         }
         if(option == 9){
             destruct(graph);
