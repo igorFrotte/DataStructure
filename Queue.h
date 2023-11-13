@@ -1,5 +1,5 @@
-#ifndef Queue_H
-#define Queue_H
+#ifndef Queue_h
+#define Queue_h
 
 /* 
     Aluno: Igor Frotté Pedro
