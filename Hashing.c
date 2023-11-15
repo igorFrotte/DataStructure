@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define N 11
 
@@ -27,7 +29,7 @@ int hash(int x){
     return x % N;
 }
 
-int insertStudent(char *fName, int x){
+int findPos(char *fName, int x){
     int pos = hash(x);
     Data d;
     FILE *f = fopen(fName, "rb");
@@ -53,6 +55,32 @@ void insertStudent(char *fName, Student *s){
     fclose(f);
 }
 
+Student * createStudent(int reg, char *nam, char *cou){
+    Student *s = (Student*)malloc(sizeof(Student));
+    s->regist = reg;
+    strcpy(s->name, nam);
+    strcpy(s->course, cou);
+    return s;
+}
+
+void findStudent(char *fName, int r){
+    
+}
+
+void printHashTable(char *fName){
+    FILE *f = fopen(fName, "rb");
+    Data d;
+    int i;
+    printf("\n");
+    for(i=0; i<N; i++){
+        fread(&d , sizeof(Data), 1, f);
+        if(d.avail == 0)
+            printf("Matricula: %d, Nome: %s, Curso: %s.\n", d.stud->regist, d.stud->name, d.stud->course);
+        else if(d.avail == 1)
+            printf("Disponível\n");
+    }
+}
+
 int mainMenu(){
     int option;
     printf("\n1- Inserir um novo Aluno.");
@@ -65,21 +93,29 @@ int mainMenu(){
 
 int main(){
     int option;
+    char *fName = "hash.bin";
+    fStart(fName);
 
     while (option != 4){
 
         option = mainMenu();
         if(option == 1){
-           
+            int r;
+            char n[50], c[50];
+            Student *s;
+            printf("\nDigite a matrícula, o nome e o curso do Aluno.\n");
+            scanf("%d %s %s", &r, n, c);
+            s = createStudent(r , n, c);
+            insertStudent(fName, s);
         }
         if(option == 2){
-            
+            int r;
+            printf("\nDigite a matrícula do Aluno.\n");
+            scanf("%d", &r);
+            findStudent(fName ,r);
         }
         if(option == 3){
-            
-        }
-        if(option == 4){
-            
+            printHashTable(fName);
         }
     }
 }
