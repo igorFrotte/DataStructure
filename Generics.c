@@ -103,6 +103,18 @@ void findPerson(Person *vetP, int reg){
     }
 }
 
+int countStudents(Person *vetP, char *cou){
+    int i, count = 0;
+    for(i=0; i<nextFreeIndex; i++){
+        if(vetP[i].type == 's'){
+            Student *s = (Student*) vetP[i].item;
+            if(strcmp(s->course, cou) == 0)
+                count++;
+        }
+    }
+    return count;
+}
+
 int mainMenu(){
     int option;
     printf("\n1- Inserir uma pessoa na lista.");
@@ -156,7 +168,12 @@ int main(){
             findPerson(vet, r);
         }
         if(option == 4){
-            
+            int n;
+            char c[50];
+            printf("\nDigite o Curso.\n");
+            scanf("%s", c);
+            n = countStudents(vet, c);
+            printf("Existem %d alunos no curso de %s", n, c);
         }
         if(option == 5){
             
