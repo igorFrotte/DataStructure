@@ -26,15 +26,15 @@ typedef struct person {
     struct person *next;
 } Person;
 
-void insertPerson(Person *list, void *inf, char type){
-        Person *p = (Person*)malloc(sizeof(Person));
-        p->type = type;
-        p->item = inf;
-        p->next = list;
-        list = p;
+void insertPerson(Person **list, void *inf, char type){
+    Person *p = (Person*)malloc(sizeof(Person));
+    p->type = type;
+    p->item = inf;
+    p->next = *list;
+    *list = p;
 }
 
-void insertStudent(Person *list, int reg, char *nam, char *cou, int yea){
+void insertStudent(Person **list, int reg, char *nam, char *cou, int yea){
     Student *s = (Student*)malloc(sizeof(Student));
     s->regist = reg;
     strcpy(s->name, nam);
@@ -43,7 +43,7 @@ void insertStudent(Person *list, int reg, char *nam, char *cou, int yea){
     insertPerson(list, s, 's');
 }
 
-void insertTeacher(Person *list, int reg, char *nam, int sal){
+void insertTeacher(Person **list, int reg, char *nam, int sal){
     Teacher *t = (Teacher*)malloc(sizeof(Teacher));
     t->regist = reg;
     strcpy(t->name, nam);
@@ -72,8 +72,9 @@ Person* removePerson(Person *list, int reg){
             }
         }
         list->next = removePerson(list->next, reg);
-    } else
-        return NULL;
+        return list;
+    }
+    return NULL;
 }
 
 void findPerson(Person *list, int reg){
@@ -97,7 +98,7 @@ void countStudents(Person *list, char *cou, int *count){
         if(list->type == 's'){
             Student *s = (Student*) list->item;
             if(strcmp(s->course, cou) == 0)
-                *count++;
+                *count = *count + 1;
         }
         countStudents(list->next, cou, count);
     }
@@ -162,12 +163,12 @@ int main(){
                 char c[50];
                 printf("\nDigite a matrícula, o nome, o curso e o ano de ingresso.\n");
                 scanf("%d %s %s %d", &r, n, c, &y);
-                insertStudent(list, r, n, c, y);
+                insertStudent(&list, r, n, c, y);
             } else if(opt == 2){
                 int s;
                 printf("\nDigite a matrícula, o nome e o salário.\n");
                 scanf("%d %s %d", &r, n, &s);
-                insertTeacher(list, r, n, s);
+                insertTeacher(&list, r, n, s);
             } else
                 printf("\nOpção inválida.\n");       
         }
