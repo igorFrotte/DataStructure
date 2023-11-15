@@ -1,3 +1,32 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define N 100
+
+/* 
+    Aluno: Igor Frotté Pedro
+    Matrícula: 123060011 
+*/
+
+typedef struct teacher {
+    int regist;
+    char name[50];
+    int salary;
+} Teacher;
+
+typedef struct student {
+    int regist;
+    char name[50];
+    char course[50];
+    int year;
+} Student;
+
+typedef struct person {
+    char type;
+    void *item;
+} Person;
+
 int mainMenu(){
     int option;
     printf("\n1- Inserir uma pessoa na lista.");

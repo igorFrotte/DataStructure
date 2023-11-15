@@ -4,6 +4,11 @@
 
 #define N 11
 
+/* 
+    Aluno: Igor Frotté Pedro
+    Matrícula: 123060011 
+*/
+
 typedef struct student {
     int regist;
     char name[50];
