@@ -19,6 +19,7 @@ void fStart(char *fName){
     FILE *f = fopen(fName, "wb");
     Data d;
     d.avail = 1;
+    d.stud = NULL;
     int i;
     for(i = 0; i<N ; i++)
         fwrite(&d, sizeof(Data), 1, f);
@@ -30,16 +31,14 @@ int hash(int x){
 }
 
 int findPos(char *fName, int x){
-    int pos = hash(x);
+    int pos = hash(x) -1;
     Data d;
     FILE *f = fopen(fName, "rb");
-    fseek(f ,pos * sizeof(Data), SEEK_SET);
-    fread(&d , sizeof(Data), 1, f);
-    while(d.avail == 0){
+    do {
         pos = (pos+1) % N;
         fseek(f ,pos * sizeof(Data), SEEK_SET);
         fread(&d , sizeof(Data), 1, f);
-    }
+    } while(d.avail == 0);
     fclose(f);
     return pos;
 }
@@ -63,8 +62,30 @@ Student * createStudent(int reg, char *nam, char *cou){
     return s;
 }
 
-void findStudent(char *fName, int r){
-    
+Student* findStudent(char *fName, int x){
+    int count = 0, pos = hash(x) - 1;
+    Data d;
+    FILE *f = fopen(fName, "rb");
+    do {
+        pos = (pos+1) % N;
+        fseek(f ,pos * sizeof(Data), SEEK_SET);
+        fread(&d , sizeof(Data), 1, f);
+        count++;
+        if(count == N || d.stud == NULL)
+            break;
+    } while(d.stud->regist != x);
+    fclose(f);
+    if(count == N)
+        return NULL;
+    return d.stud;
+}
+
+void printStudent(char *fName, int r){
+    Student *s = findStudent(fName, r);
+    if(s == NULL)
+        printf("\nEsta Matrícula não existe!\n");
+    else
+        printf("\nMatricula: %d, Nome: %s, Curso: %s.\n", s->regist, s->name, s->course);
 }
 
 void printHashTable(char *fName){
@@ -112,7 +133,7 @@ int main(){
             int r;
             printf("\nDigite a matrícula do Aluno.\n");
             scanf("%d", &r);
-            findStudent(fName ,r);
+            printStudent(fName ,r);
         }
         if(option == 3){
             printHashTable(fName);
