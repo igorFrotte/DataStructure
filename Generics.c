@@ -85,6 +85,24 @@ void removePerson(Person *vetP, int reg){
     }
 }
 
+void findPerson(Person *vetP, int reg){
+    int i;
+    for(i=0; i<nextFreeIndex; i++){
+        if(vetP[i].type == 's'){
+            Student *s = (Student*) vetP[i].item;
+            if(s->regist == reg){
+                printf("\nAluno -> Matrícula: %d, Nome: %s, Curso: %s, Ano de Ingresso: %d\n", s->regist, s->name, s->course, s->year);
+            }
+        }
+        if(vetP[i].type == 't'){
+            Teacher *t = (Teacher*) vetP[i].item;
+            if(t->regist == reg){
+                printf("\nProfessor -> Matrícula: %d, Nome: %s, Salário: %d\n", t->regist, t->name, t->salary);
+            }
+        }
+    }
+}
+
 int mainMenu(){
     int option;
     printf("\n1- Inserir uma pessoa na lista.");
@@ -132,7 +150,10 @@ int main(){
             removePerson(vet, r);
         }
         if(option == 3){
-            
+            int r;
+            printf("\nDigite a Matrícula.\n");
+            scanf("%d", &r);
+            findPerson(vet, r);
         }
         if(option == 4){
             
