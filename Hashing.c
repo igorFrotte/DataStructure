@@ -9,7 +9,7 @@ typedef struct student {
 } Student;
 
 typedef struct data {
-    Student stud;
+    Student *stud;
     int avail;
 } Data;
 
@@ -21,9 +21,37 @@ void fStart(char *fName){
     for(i = 0; i<N ; i++)
         fwrite(&d, sizeof(Data), 1, f);
     fclose(f);
+} 
+
+int hash(int x){
+    return x % N;
 }
 
+int insertStudent(char *fName, int x){
+    int pos = hash(x);
+    Data d;
+    FILE *f = fopen(fName, "rb");
+    fseek(f ,pos * sizeof(Data), SEEK_SET);
+    fread(&d , sizeof(Data), 1, f);
+    while(d.avail == 0){
+        pos = (pos+1) % N;
+        fseek(f ,pos * sizeof(Data), SEEK_SET);
+        fread(&d , sizeof(Data), 1, f);
+    }
+    fclose(f);
+    return pos;
+}
 
+void insertStudent(char *fName, Student *s){
+    int pos = findPos(fName, s->regist);
+    FILE *f = fopen(fName, "r+b");
+    Data d;
+    d.avail = 0;
+    d.stud = s;
+    fseek(f ,pos * sizeof(Data), SEEK_SET);
+    fwrite(&d , sizeof(Data), 1, f);
+    fclose(f);
+}
 
 int mainMenu(){
     int option;
