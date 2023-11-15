@@ -63,6 +63,28 @@ void insertTeacher(Person *vetP, int reg, char *nam, int sal){
     insertPerson(vetP, t, 't');
 }
 
+void removePerson(Person *vetP, int reg){
+    int i;
+    for(i=0; i<nextFreeIndex; i++){
+        if(vetP[i].type == 's'){
+            Student *s = (Student*) vetP[i].item;
+            if(s->regist == reg){
+                free(s);
+                vetP[i].type = ' ';
+                vetP[i].item = NULL;
+            }
+        }
+        if(vetP[i].type == 't'){
+            Teacher *t = (Teacher*) vetP[i].item;
+            if(t->regist == reg){
+                free(t);
+                vetP[i].type = ' ';
+                vetP[i].item = NULL;
+            }
+        }
+    }
+}
+
 int mainMenu(){
     int option;
     printf("\n1- Inserir uma pessoa na lista.");
@@ -104,7 +126,10 @@ int main(){
                 printf("\nOpção inválida.\n");       
         }
         if(option == 2){
-            
+            int r;
+            printf("\nDigite a Matrícula.\n");
+            scanf("%d", &r);
+            removePerson(vet, r);
         }
         if(option == 3){
             
