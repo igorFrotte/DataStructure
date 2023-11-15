@@ -90,15 +90,13 @@ void findPerson(Person *vetP, int reg){
     for(i=0; i<nextFreeIndex; i++){
         if(vetP[i].type == 's'){
             Student *s = (Student*) vetP[i].item;
-            if(s->regist == reg){
+            if(s->regist == reg)
                 printf("\nAluno -> Matrícula: %d, Nome: %s, Curso: %s, Ano de Ingresso: %d\n", s->regist, s->name, s->course, s->year);
-            }
         }
         if(vetP[i].type == 't'){
             Teacher *t = (Teacher*) vetP[i].item;
-            if(t->regist == reg){
+            if(t->regist == reg)
                 printf("\nProfessor -> Matrícula: %d, Nome: %s, Salário: %d\n", t->regist, t->name, t->salary);
-            }
         }
     }
 }
@@ -113,6 +111,25 @@ int countStudents(Person *vetP, char *cou){
         }
     }
     return count;
+}
+
+void higherSalary(Person *vetP){
+    int i, high = 0;
+    for(i=0; i<nextFreeIndex; i++){
+        if(vetP[i].type == 't'){
+            Teacher *t = (Teacher*) vetP[i].item;
+            if(t->salary > high)
+                high = t->salary;
+        }
+    }
+    for(i=0; i<nextFreeIndex; i++){
+        if(vetP[i].type == 't'){
+            Teacher *t = (Teacher*) vetP[i].item;
+            if(t->salary == high)
+                printf("\nMatrícula: %d, Nome: %s, Salário: %d", t->regist, t->name, t->salary);
+        }
+    }
+    printf("\n");
 }
 
 int mainMenu(){
@@ -173,13 +190,10 @@ int main(){
             printf("\nDigite o Curso.\n");
             scanf("%s", c);
             n = countStudents(vet, c);
-            printf("Existem %d alunos no curso de %s", n, c);
+            printf("\nExistem %d alunos no curso de %s.\n", n, c);
         }
         if(option == 5){
-            
-        }
-        if(option == 6){
-            
+            higherSalary(vet);
         }
     }
 }
