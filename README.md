@@ -11,4 +11,5 @@ Programas relacionados à utilização de árvores na linguagem C.
 ### Arvore Rubro Negra
 ### BackTracking
 ### Heap
-### other
+### TAD
+### others
