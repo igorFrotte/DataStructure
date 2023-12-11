@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 
 #define N 100
 
@@ -130,13 +131,29 @@ int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj){
     return 1;
 }
 
-void printAll(TadMaxHeap maxHeap){
+void printAll(TadMaxHeap maxHeap){ //mudar
     if(empty(maxHeap))
         printf("\nLista Vazia.\n");
     else {
         printf("\n");
-        for(int i = 0; i < maxHeap->items; i++)
+        for(int i = 0; i < maxHeap->totalElements; i++)
             printf("%d ", maxHeap->items[i].key);
         printf("\n");
     }
+}
+
+int existRecursive(TadMaxHeap maxHeap, int key, int index){
+    if(index == -1)
+        return 0;
+    if(maxHeap->items[index].key == key)
+        return 1;
+        
+    int rChild = rightChildIndex(maxHeap->totalElements, index);
+    int lChild = leftChildIndex(maxHeap->totalElements, index);
+
+    return existRecursive(maxHeap, key, rChild) || existRecursive(maxHeap, key, lChild);
+}
+
+int exist(TadMaxHeap maxHeap, int key){
+    return existRecursive(maxHeap, key, 0);
 }

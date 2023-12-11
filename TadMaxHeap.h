@@ -12,5 +12,6 @@ TadMaxHeap destruct(TadMaxHeap maxHeap);
 int insertItem(TadMaxHeap maxHeap, int key, void *obj, int sizeObj);
 int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj);
 void printAll(TadMaxHeap maxHeap);
+int exist(TadMaxHeap maxHeap, int key);
 
 #endif
