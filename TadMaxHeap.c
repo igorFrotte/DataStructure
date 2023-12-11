@@ -121,9 +121,13 @@ int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj) {
     *key = result.key;
     memcpy(obj, result.obj, sizeObj); 
     maxHeap->items[0] = maxHeap->items[maxHeap->totalElements-1];
+    free(maxHeap->items[maxHeap->totalElements-1].obj);
+    maxHeap->items[maxHeap->totalElements-1].obj = NULL;
     maxHeap->totalElements--;
 
-    downAdjust(maxHeap->items, 0);
+    downAdjust(maxHeap, 0);
 	
     return 1;
 }
+
+
