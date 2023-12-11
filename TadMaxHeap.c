@@ -102,14 +102,14 @@ int empty(TadMaxHeap maxHeap){
 void downAdjust(TadMaxHeap maxHeap, int pos){
 	if(pos != -1 && leftChildIndex(maxHeap->totalElements, pos) != -1){
         Item *heap = maxHeap->items;
-		int youngestChildIndex = leftChildIndex(maxHeap->totalElements, pos);
-		if(rightChildIndex(maxHeap->totalElements, pos) != -1 && heap[rightChildIndex(maxHeap->totalElements, pos)].key > heap[youngestChildIndex].key)
-			youngestChildIndex = rightChildIndex(maxHeap->totalElements, pos);
-		if(heap[youngestChildIndex].key > heap[pos].key){
+		int olderChildIndex = leftChildIndex(maxHeap->totalElements, pos);
+		if(rightChildIndex(maxHeap->totalElements, pos) != -1 && heap[rightChildIndex(maxHeap->totalElements, pos)].key > heap[olderChildIndex].key)
+			olderChildIndex = rightChildIndex(maxHeap->totalElements, pos);
+		if(heap[olderChildIndex].key > heap[pos].key){
 			Item aux = heap[pos];
-			heap[pos] = heap[youngestChildIndex];
-			heap[youngestChildIndex] = aux;
-			downAdjust(maxHeap, youngestChildIndex);
+			heap[pos] = heap[olderChildIndex];
+			heap[olderChildIndex] = aux;
+			downAdjust(maxHeap, olderChildIndex);
 		}
 	}
 }
@@ -124,9 +124,9 @@ int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj){
     maxHeap->items[0] = maxHeap->items[maxHeap->totalElements-1];
     free(maxHeap->items[maxHeap->totalElements-1].obj);
     maxHeap->items[maxHeap->totalElements-1].obj = NULL;
-    maxHeap->totalElements--;
-
+    
     downAdjust(maxHeap, 0);
+    maxHeap->totalElements--;
 	
     return 1;
 }

@@ -52,10 +52,11 @@ int main(){
             Carro c;
             if(removeItem(q, &key, &c, sizeof(c)) == 0)
                 printf("\nA fila esta vazia!\n");
-            else 
+            else {
                 printf("\nO item removido foi: %d\n", key);
                 printMain(&c);
                 printf("\n");
+            }
         }
         if(option == 3){
             int x;

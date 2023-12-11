@@ -30,15 +30,16 @@ int main(){
 
         option = mainMenu();
         if(option == 1){
-            int x;
+            int x, y;
             printf("\nDigite o valor do elemento.\n");
             scanf("%d", &x);
-            if(insertItem(q, x, &x, sizeof(x)) == 0)
+            y = x;
+            if(insertItem(q, x, &y, sizeof(int)) == 0)
                 printf("\nA fila esta cheia!\n");
         }
         if(option == 2){
-            int x;
-            if(removeItem(q, &x, &x, sizeof(x)) == 0)
+            int x, y;
+            if(removeItem(q, &x, &y, sizeof(int)) == 0)
                 printf("\nA fila esta vazia!\n");
             else 
                 printf("\nO item removido foi: %d\n", x);
