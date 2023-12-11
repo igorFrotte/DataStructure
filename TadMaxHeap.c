@@ -131,29 +131,50 @@ int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj){
     return 1;
 }
 
-void printAll(TadMaxHeap maxHeap){ //mudar
+void printAll(TadMaxHeap maxHeap, void *f(void *)){ 
     if(empty(maxHeap))
         printf("\nLista Vazia.\n");
     else {
         printf("\n");
-        for(int i = 0; i < maxHeap->totalElements; i++)
-            printf("%d ", maxHeap->items[i].key);
+        for(int i = 0; i < maxHeap->totalElements; i++){
+            printf("Chave: %d ", maxHeap->items[i].key);
+            printf("Item: ");
+            f(maxHeap->items[i].obj);
+            printf("\n");
+        }
         printf("\n");
     }
 }
 
-int existRecursive(TadMaxHeap maxHeap, int key, int index){
+int findIndextem(TadMaxHeap maxHeap, int key, int index){
     if(index == -1)
         return 0;
     if(maxHeap->items[index].key == key)
-        return 1;
-        
-    int rChild = rightChildIndex(maxHeap->totalElements, index);
-    int lChild = leftChildIndex(maxHeap->totalElements, index);
+        return index;
 
-    return existRecursive(maxHeap, key, rChild) || existRecursive(maxHeap, key, lChild);
+    int child = findIndextem(maxHeap, key, rightChildIndex(maxHeap->totalElements, index));
+    if(child != 0)
+        return child;
+    
+    child = findIndextem(maxHeap, key, leftChildIndex(maxHeap->totalElements, index));
+    if(child != 0)
+        return child;
+    
+    return -1;
 }
 
 int exist(TadMaxHeap maxHeap, int key){
-    return existRecursive(maxHeap, key, 0);
+    return !(findIndextem(maxHeap, key, 0) == -1);
 }
+
+void printItem(TadMaxHeap maxHeap, int key, void *f(void *)){ 
+    if(!exist(maxHeap, key))
+        printf("\nItem não encontrado.\n");
+    else {
+        Item item = maxHeap->items[findIndextem(maxHeap, key, 0)];
+        printf("\n%d\n", item.key);
+        f(item.obj);
+        printf("\n");
+    }
+}
+
