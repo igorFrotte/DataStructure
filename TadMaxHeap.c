@@ -80,7 +80,7 @@ void upAdjust(TadMaxHeap maxHeap, int pos){
 	}
 }
 
-int insertItem(TadMaxHeap maxHeap, int key, void *obj, int sizeObj) {
+int insertItem(TadMaxHeap maxHeap, int key, void *obj, int sizeObj){
 	if(full(maxHeap))
 		return 0;
 
@@ -113,7 +113,7 @@ void downAdjust(TadMaxHeap maxHeap, int pos){
 	}
 }
 
-int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj) {
+int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj){
 	if(empty(maxHeap))
 		return 0;
 
@@ -130,4 +130,13 @@ int removeItem(TadMaxHeap maxHeap, int *key, void *obj, int sizeObj) {
     return 1;
 }
 
-
+void printAll(TadMaxHeap maxHeap){
+    if(empty(maxHeap))
+        printf("\nLista Vazia.\n");
+    else {
+        printf("\n");
+        for(int i = 0; i < maxHeap->items; i++)
+            printf("%d ", maxHeap->items[i].key);
+        printf("\n");
+    }
+}
