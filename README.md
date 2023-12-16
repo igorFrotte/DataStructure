@@ -13,3 +13,4 @@ Programas relacionados à utilização de árvores na linguagem C.
 ### Heap
 ### TAD
 ### others
+### Hashing
