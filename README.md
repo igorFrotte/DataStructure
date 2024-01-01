@@ -12,5 +12,6 @@ Programas relacionados à utilização de árvores na linguagem C.
 ### BackTracking
 ### Heap
 ### TAD
-### others
 ### Hashing
+
+Separando em pastas...
