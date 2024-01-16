@@ -1,6 +1,4 @@
-# Arvores
-
-Programas relacionados à utilização de árvores na linguagem C. 
+Passar tudo para inglês e organizar melhor...
 
 ### Listas Encadeadas
 ### Árvores Binárias
